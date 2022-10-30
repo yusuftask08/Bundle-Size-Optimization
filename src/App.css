@@ -1,0 +1,19 @@
+.nav {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.nav li {
+    display: flex;
+    margin-left: 10px;
+    color: #FFFFFF;
+
+}
+
+.nav li a {
+    text-decoration: none;
+    margin-left: 10px;
+    color:black;
+    font-size: 22px;
+}
