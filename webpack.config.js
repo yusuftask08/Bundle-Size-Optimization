@@ -2,7 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CompressionPlugin = require("compression-webpack-plugin");
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer-brotli').BundleAnalyzerPlugin;
+const zlib = require("zlib");
 
 module.exports = {
     mode: 'development',
@@ -56,7 +59,26 @@ module.exports = {
             title: "React Bundle Size Optimization",
             template: path.resolve(__dirname, './src/index.html')
         }),
-        new BundleAnalyzerPlugin()
+        new BundleAnalyzerPlugin(),
+        new CompressionPlugin({
+            filename: "[name].gz",
+            algorithm: "gzip",
+            test: /\.js$|\.css$|\.html$/,
+            threshold: 10240,
+            minRatio: 0.8,
+          }),
+          new CompressionPlugin({
+            filename: "[name].br",
+            algorithm: "brotliCompress",
+            test: /\.(js|css|html|svg)$/,
+            compressionOptions: {
+              params: {
+                [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+              },
+            },
+            threshold: 10240,
+            minRatio: 0.8,
+          }),
     ],
     optimization: {
         chunkIds: 'named',
@@ -64,5 +86,8 @@ module.exports = {
             chunks: 'all',
             name: 'vendors'
         }
+    },
+    performance:{
+        hints:false,
     }
 };
