@@ -8,7 +8,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer-brotli').BundleAna
 const zlib = require("zlib");
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: path.resolve(__dirname, "./src/index.js"),
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -40,7 +40,6 @@ module.exports = {
             Utilities: path.resolve(__dirname, 'src/utils/'),
         }
     },
-    devtool: "eval-cheap-module-source-map",
     devServer: {
         static: {
             directory: path.join(__dirname, './dist')
@@ -66,19 +65,19 @@ module.exports = {
             test: /\.js$|\.css$|\.html$/,
             threshold: 10240,
             minRatio: 0.8,
-          }),
-          new CompressionPlugin({
+        }),
+        new CompressionPlugin({
             filename: "[name].br",
             algorithm: "brotliCompress",
             test: /\.(js|css|html|svg)$/,
             compressionOptions: {
-              params: {
-                [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-              },
+                params: {
+                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+                },
             },
             threshold: 10240,
             minRatio: 0.8,
-          }),
+        }),
     ],
     optimization: {
         chunkIds: 'named',
@@ -87,7 +86,10 @@ module.exports = {
             name: 'vendors'
         }
     },
-    performance:{
-        hints:false,
+    performance: {
+        hints: false,
+    },
+    stats: {
+        optimizationBailout: true,
     }
 };
